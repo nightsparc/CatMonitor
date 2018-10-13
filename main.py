@@ -58,7 +58,9 @@ try:
 
         # Begin with random selected GIF
         print("********** Start VIS of random gif ****************")
-        directory = "/home/pi/cats/Resized"
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        directory = dir_path + "/cats/Resized"
+        print("Directory: " + directory)
 
         while True:
             #filename = random.choice(os.listdir("cats/Resized"))

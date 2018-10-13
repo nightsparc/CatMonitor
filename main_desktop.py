@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-#import LCD_1in44
-#import LCD_Config
-
+import os
+import random
 import imageio
 import time
 import numpy as np
@@ -23,6 +22,32 @@ def LCD_ShowImageAsArray(Image,Xstart,Ystart):
 	pix[...,[1]] = np.add(np.bitwise_and(np.left_shift(Image[...,[1]],3),0xE0),np.right_shift(Image[...,[2]],3))
 	pix = pix.flatten().tolist()
 
+def displayGIFWithOpenCV(GIFImage, name):
+	numOfFrames = len(GIFImage)
+	print("Total {} frames in the gif \"{}\"!".format(numOfFrames, name))
+	# convert form RGB to BGR 
+	imgs = [cv2.cvtColor(img, cv2.COLOR_RGB2BGR) for img in GIFImage]
+
+	# show the single images
+	i = 0
+	try:
+		repeats = 1
+		if numOfFrames <= 10:
+			repeats = 3
+		elif numOfFrames <= 25:
+			repeats = 2
+		for x in range(0, repeats * numOfFrames):
+			LCD_ShowImageAsArray(imgs[i], 0, 0)
+			cv2.namedWindow("cat")
+			cv2.imshow("cat", imgs[i])
+			if cv2.waitKey(60)&0xFF == 27:
+				break
+			i = (i+1)%numOfFrames
+		else:
+			print("End of OpenCV vis loop :)")
+	except Exception as er:
+		print("OpenCV vis exception! Error: " + str(er))
+
 try:
 	def main():
 		#LCD = LCD_1in44.LCD()
@@ -34,28 +59,28 @@ try:
 		#LCD.LCD_ShowImage(image,0,0)
 		#LCD_Config.Driver_Delay_ms(500)
 
-		print("********** Start GIF of single  image **********")
+		# print("********** Start GIF of single  image **********")
+		# cat = imageio.mimread("cats/Resized/cat_1.gif")
+		# displayGIFWithOpenCV(cat, "cat")
+
+		# Begin with random selected GIF
+		print("********** Start VIS of random gif ****************")
+		directory = "cats/Resized"
+
+		for x in range(1, 20):
+			#filename = random.choice(os.listdir("cats/Resized"))
+			filename = random.choice([x for x in os.listdir(directory) if os.path.isfile(os.path.join(directory, x))]) # last part ensures that opened file is a file
+			print("Random choice file: " + directory + "/" + filename)
+			try:
+				catRandom = imageio.mimread(directory + "/" + filename)
+				displayGIFWithOpenCV(catRandom, "random cat " + filename)
+			except Exception as er:
+				print("ImageIO mimread error: " + str(er))
 		
-		cat = imageio.mimread("cats/Resized/cat_1.gif")
-		numOfFrames = len(cat)
-		print("Total {} frames in the gif!".format(numOfFrames))
-
-		# convert form RGB to BGR 
-		# imgs = cat
-		imgs = [cv2.cvtColor(img, cv2.COLOR_RGB2BGR) for img in cat]
-
-		# show the single images
-		i = 0
-		while True:
-			LCD_ShowImageAsArray(imgs[i], 0, 0)
-			cv2.imshow("gif", imgs[i])
-			if cv2.waitKey(100)&0xFF == 27:
-				break
-			i = (i+1)%numOfFrames
-
+		# Destroy all created windows at end
 		cv2.destroyAllWindows()
 
-		time.sleep()
+		print("Stopping cat test monitor. Goodbye :)")
 		
 	if __name__ == '__main__':
 		main()

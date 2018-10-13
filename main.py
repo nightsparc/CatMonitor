@@ -11,6 +11,7 @@ import random
 
 # Import imageio stuff
 import imageio
+import numpy as np
 
 LCD = LCD_1in44.LCD()
 
@@ -27,7 +28,7 @@ def displayGIF(GIFImage, name):
             repeats = 2
         i = 0
         for x in range(0, repeats * numOfFrames):
-            LCD.LCD_ShowImageAsArray(GIFImage[i],0,0)
+            LCD.LCD_ShowImageAsArray(np.flipud(GIFImage[i]), 0, 0)
             time.sleep(0.06)
             i = (i+1)%numOfFrames
         else:

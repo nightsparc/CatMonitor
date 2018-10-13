@@ -313,6 +313,7 @@ class LCD:
                 for i in range(0,len(pix),4096):
                         LCD_Config.SPI_Write_Byte(pix[i:i+4096])
 
+        # small modifed variant of the function above to display a np ndarray diretly
         def LCD_ShowImageAsArray(self,Image,Xstart,Ystart):
                 #print("Show Image As Array!")
                 if (Image.all() == None):

@@ -29,7 +29,7 @@ def displayGIF(GIFImage, name):
         i = 0
         for x in range(0, repeats * numOfFrames):
             LCD.LCD_ShowImageAsArray(np.flipud(GIFImage[i]), 0, 0)
-            time.sleep(0.06)
+            time.sleep(0.04)
             i = (i+1)%numOfFrames
         else:
             print("End of OpenCV vis loop :)")
@@ -41,7 +41,7 @@ try:
         print("**********Init LCD**********")
         Lcd_ScanDir = LCD_1in44.SCAN_DIR_DFT  #SCAN_DIR_DFT = D2U_L2R
         LCD.LCD_Init(Lcd_ScanDir)
-        LCD_Config.Driver_Delay_ms(500)
+        LCD_Config.Driver_Delay_ms(200)
 
         # print("********** Start GIF of single  image **********")
         # cat = imageio.mimread("cats/cat_1.gif")
